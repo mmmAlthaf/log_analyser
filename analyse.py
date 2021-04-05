@@ -3,7 +3,7 @@ import re
 import sys
 
 inputFile = sys.argv[1]
-print("What analysis do you want to do?\n1) Logs with key word\n2) With Time stamp\n3) Every action after user log in")
+print("What analysis do you want?\n1) Logs with key word\n2) With Time stamp\n3) Every action after user log in")
 choice = input('>')
 
 if(choice == "1"):
