@@ -19,19 +19,25 @@ def findLogs(line_regex):
                     # print(line)
                     out_file.write(line)
 
-print("What analysis do you want?\n1) Action Logs\n2) LANG SERVER logs\n3) Every action after USER LOGIN")
+print("What analysis do you want?\n1) Action\n2) LANG SERVER\n3) Error Logs\n4) Every action after USER LOGIN\n5) All Actions till Error\n6) Readable format")
 choice = input('>')
 
 if(choice == "1"):
-    line_regex = re.compile(r".*action.*$")
-    findLogs(line_regex)
+    action_regex = re.compile(r".*1  action.*$")
+    findLogs(action_regex)
 
 if(choice == "2"):
-    line_regex = re.compile(r".*LANG CLIENT.*$")
-    findLogs(line_regex)
+    lang_regex = re.compile(r".*LANG CLIENT.*$")
+    findLogs(lang_regex)
+
 
 if(choice == "3"):
-    line_regex = re.compile(r".*action.*$")
+    error_regex = re.compile(r".*Error.*$")
+    findLogs(error_regex)
+
+if(choice == "4"):
+    action_regex = re.compile(r".*1  action.*$")
+    lang_regex = re.compile(r".*LANG CLIENT.*$")
     checkLogin = False
     with open(output_filename, "a") as out_file:
         with open(inputFile, "r") as in_file:
@@ -39,33 +45,41 @@ if(choice == "3"):
                 if "LOGIN_START" in line:
                     checkLogin = True
                 if(checkLogin):
-                    if (line_regex.search(line)):
+                    if (action_regex.search(line) or lang_regex.search(line)):
                         # print(line)
                         out_file.write(line)
 
+if(choice == "5"):
+    action_regex = re.compile(r".*1  action.*$")
+    lang_regex = re.compile(r".*LANG CLIENT.*$")
+    error_regex = re.compile(r".*Error.*$")
+    checkError = False
+    with open(output_filename, "a") as out_file:
+        with open(inputFile, "r") as in_file:
+            for line in in_file:
+                if "Error" in line:
+                    checkError = True
+                    count = 150
+                if(not checkError):
+                    if (action_regex.search(line) or lang_regex.search(line) or error_regex.search(line)):
+                        out_file.write(line)
+                if(checkError):
+                    count = count -1
+                    if(count > 0):
+                        if (action_regex.search(line) or lang_regex.search(line) or error_regex.search(line)):
+                            out_file.write(line)
+
+if(choice == "6"):
+    action_regex = re.compile(r".*1  action.*$")
+    lang_regex = re.compile(r".*LANG CLIENT.*$")
+    error_regex = re.compile(r".*Error.*$")
+    intervention_regex = re.compile(r".*Intervention.*$")
+    with open(output_filename, "a") as out_file:
+        with open(inputFile, "r") as in_file:
+            for line in in_file:
+                if (action_regex.search(line) or lang_regex.search(line) or error_regex.search(line) or intervention_regex.search(line)):
+                    out_file.write(line)
+
+
 
 print("Find the analysis in file output.log")
-
-# Still testing this out
-#
-# if(choice == "4"):
-#     keyWord = input('Keyword (leave blank if not needed): ')
-#     startTime = input('Start Time (yy-mm-ddThh:mm:ss): ')
-#     endTime = input('End Time (yy-mm-ddThh:mm:ss): ')
-#     line_regex = re.compile(r".*"+keyWord+".*$")
-#     output_filename = os.path.normpath("output.log")
-#     with open(output_filename, "w") as out_file:
-#         out_file.write("")
-#     isBetweenTime = False
-#     with open(output_filename, "a") as out_file:
-#         with open(inputFile, "r") as in_file:
-#             for line in in_file:
-#                 if startTime in line:
-#                     isBetweenTime = True
-#                 if(isBetweenTime):
-#                     if (line_regex.search(line)):
-#                         # print(line)
-#                         out_file.write(line)
-#                 if endTime in line:
-#                     isBetweenTime = False
-#     print("Find the analysis in file output.log")
