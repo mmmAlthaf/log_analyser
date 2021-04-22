@@ -21,21 +21,25 @@ def findLogs(line_regex):
 
 print("What analysis do you want?\n1) Action\n2) LANG SERVER\n3) Error Logs\n4) Every action after USER LOGIN\n5) All Actions till Error\n6) Readable format")
 choice = input('>')
-
+success = False
 if(choice == "1"):
+    success = True
     action_regex = re.compile(r".*1  action.*$")
     findLogs(action_regex)
 
 if(choice == "2"):
+    success = True
     lang_regex = re.compile(r".*LANG CLIENT.*$")
     findLogs(lang_regex)
 
 
 if(choice == "3"):
+    success = True
     error_regex = re.compile(r".*Error.*$")
     findLogs(error_regex)
 
 if(choice == "4"):
+    success = True
     action_regex = re.compile(r".*1  action.*$")
     lang_regex = re.compile(r".*LANG CLIENT.*$")
     checkLogin = False
@@ -50,6 +54,7 @@ if(choice == "4"):
                         out_file.write(line)
 
 if(choice == "5"):
+    success = True
     action_regex = re.compile(r".*1  action.*$")
     lang_regex = re.compile(r".*LANG CLIENT.*$")
     error_regex = re.compile(r".*Error.*$")
@@ -70,6 +75,7 @@ if(choice == "5"):
                             out_file.write(line)
 
 if(choice == "6"):
+    success = True
     action_regex = re.compile(r".*1  action.*$")
     lang_regex = re.compile(r".*LANG CLIENT.*$")
     error_regex = re.compile(r".*Error.*$")
@@ -80,6 +86,8 @@ if(choice == "6"):
                 if (action_regex.search(line) or lang_regex.search(line) or error_regex.search(line) or intervention_regex.search(line)):
                     out_file.write(line)
 
+if(not success):
+    print("Please provide a proper response")
+else:
+    print("Find the analysis in file output.log")
 
-
-print("Find the analysis in file output.log")
